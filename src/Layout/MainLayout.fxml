@@ -12,20 +12,46 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="588.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
    <children>
-      <ToolBar layoutX="14.0" layoutY="14.0" prefHeight="41.0" prefWidth="924.0">
-        <items>
-          <Button mnemonicParsing="false" text="File" />
-            <Button mnemonicParsing="false" text="About" />
-        </items>
-      </ToolBar>
       <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" onAction="#Capital" prefHeight="41.0" prefWidth="482.0" />
       <Label fx:id="CapitalDisplayLabel" layoutX="509.0" layoutY="80.0" prefHeight="41.0" prefWidth="423.0">
          <font>
             <Font size="18.0" />
          </font></Label>
-      <Label fx:id="HourTens" layoutX="10.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: blue;" />
-      <Label fx:id="HourUnits" layoutX="223.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: blue;" />
-      <Label fx:id="MinuteTens" layoutX="518.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: blue;" />
-      <Label fx:id="MinuteUnits" layoutX="732.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: blue;" />
+      <Label fx:id="HourTens" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+         <font>
+            <Font size="96.0" />
+         </font></Label>
+      <Label fx:id="HourUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="223.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+         <font>
+            <Font size="96.0" />
+         </font></Label>
+      <Label fx:id="MinuteTens" alignment="CENTER" contentDisplay="CENTER" layoutX="518.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+         <font>
+            <Font size="96.0" />
+         </font></Label>
+      <Label fx:id="MinuteUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="732.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+         <font>
+            <Font size="96.0" />
+         </font></Label>
+      <MenuBar fx:id="Menu" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="911.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#AddItem" text="Add Item" />
+              <MenuItem mnemonicParsing="false" onAction="#close" text="Quit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#About" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </Pane>

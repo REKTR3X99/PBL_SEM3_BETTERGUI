@@ -1,14 +1,16 @@
 package Layout;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 
 import javax.swing.*;
@@ -30,7 +32,7 @@ public class Controller implements Initializable {
     private ObservableList<String> GMTOffset;
 
 
-    private BufferedImage[] BufferedImageForTime = new BufferedImage[4];
+
     @FXML
      private ComboBox CountryComboBox;
 
@@ -49,7 +51,11 @@ public class Controller implements Initializable {
     @FXML
     private Label MinuteUnits;
 
+    @FXML
+    private MenuBar Menu;
 
+    @FXML
+    private Button AboutButton;
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -124,6 +130,7 @@ public class Controller implements Initializable {
     {
 
         CapitalDisplayLabel.setText(CapitalList.get((CountryComboBox.getSelectionModel().getSelectedIndex())));
+        DisplayTime();
 
     }
 
@@ -136,8 +143,6 @@ public class Controller implements Initializable {
 
         int GMTHour = CalToGetTime.get(Calendar.HOUR_OF_DAY); //Get the current GMT Hour
         int GMTMinute = CalToGetTime.get(Calendar.MINUTE); //Get the current GMT time
-        int[] ImgHour = new int[2];  //Image Corresponding to the given hour
-        int[] ImgMinute = new int[2]; //Image corresponding to the given minute
 
         String checker = GMTOffset.get(CountryComboBox.getSelectionModel().getSelectedIndex());
         String HourString; //To Store the hours
@@ -176,7 +181,7 @@ public class Controller implements Initializable {
          * Checker equals the data which has the index of the selected item from the combobox
          * and the ZoneOffsetData.
          *
-         * It checks if the checker starts with which sign and if the spcified value exists in the given data or if its "UTC"
+         * It checks if the checker starts with which sign and if the specified value exists in the given data or if its "UTC"
          * for which the time cannot be determined.
          */
 
@@ -206,7 +211,7 @@ public class Controller implements Initializable {
                 // offsetting the given GMTHour from the calendar by the Zone Offset from GMT
                 //For some reason  if I don't add 1 the time remains an hour behind so there's a 1
                 //Also converting HourString from String to Int
-                GMTHour = GMTHour + Integer.parseInt(HourString) + 1;
+                GMTHour = GMTHour + Integer.parseInt(HourString);
 
                 //Offsetting the minute and adding it to the GMTMinute.
                 //Also parsing the value of MinuteString to convert from String to Int
@@ -250,33 +255,47 @@ public class Controller implements Initializable {
         }
         System.out.println(GMTHour + ":" + GMTMinute);
 
-        System.out.println(GMTHour % 10);
+        HourUnits.setText(String.valueOf(GMTHour % 10));
+        GMTHour/=10;
+        HourTens.setText(String.valueOf(GMTHour));
 
-        ImgHour[1] = GMTHour % 10; //Extracting the Second number of Hour
-        ImgMinute[1] = GMTMinute % 10; //Extracting the Second number of Minute
-        GMTHour = GMTHour / 10; //Dividng Hour by 10
-        GMTMinute = GMTMinute / 10; //Dividing Minute by 10
-        ImgHour[0] = GMTHour; //Extracting the First number of Hour
-        ImgMinute[0] = GMTMinute; //EXtracting First number of Minute
+        MinuteUnits.setText(String.valueOf(GMTHour % 10));
+        GMTMinute/=10;
+        MinuteTens.setText(String.valueOf(GMTMinute));
 
+    }
 
+    @FXML
+    void close(ActionEvent e)
+    {
+        Platform.exit();
+    }
 
+    @FXML
+    void AddItem(ActionEvent e) throws Exception
+    {
 
+        Stage AddLayoutStage = new Stage();
 
-        //Performing Image scaling on individual Labels
-        /*
-         * I know there are better methods but for the time being I'll stick to this so that I won't break the entire code
-         * */
-
-
-
-        HourTens.setGraphic(new ImageView(String.valueOf(BufferedImageForTime[ImgHour[0]]))); //Setting the Icon on the label to the given ImageIcon
-        HourUnits.setGraphic(new ImageView(String.valueOf(BufferedImageForTime[ImgHour[1]])));
-        MinuteTens.setGraphic(new ImageView(String.valueOf(BufferedImageForTime[ImgMinute[0]])));
-        MinuteUnits.setGraphic(new ImageView(String.valueOf(BufferedImageForTime[ImgMinute[1]])));
-
+        Parent root = FXMLLoader.load(getClass().getResource("AddLayout.fxml"));
 
 
+        Scene scene = new Scene(root, 400, 600);
+        scene.setRoot(root);
+        AddLayoutStage.setTitle("Set Value");
+        AddLayoutStage.setScene(scene);
+        AddLayoutStage.show();
+
+
+    }
+
+    @FXML
+    void About(ActionEvent e)
+    {
+        Alert AboutField = new Alert(Alert.AlertType.INFORMATION);
+        AboutField.setHeaderText("Team");
+        AboutField.setContentText("Ajay Nair \n Parth Nair\n Gokul Chathankulam");
+        AboutField.showAndWait();
     }
 
 }
