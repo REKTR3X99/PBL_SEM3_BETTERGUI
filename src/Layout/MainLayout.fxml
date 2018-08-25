@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -10,30 +11,30 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="588.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="974.0" style="-fx-background-image: /Resources/world_Map.jpg;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
    <children>
-      <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" onAction="#Capital" prefHeight="41.0" prefWidth="482.0" />
-      <Label fx:id="CapitalDisplayLabel" layoutX="509.0" layoutY="80.0" prefHeight="41.0" prefWidth="423.0">
+      <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" onAction="#Capital" prefHeight="49.0" prefWidth="486.0" />
+      <Label fx:id="CapitalDisplayLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="509.0" layoutY="80.0" prefHeight="41.0" prefWidth="423.0" style="-fx-border-color: grey; -fx-border-width: 4; -fx-border-radius: 10;" textAlignment="CENTER">
          <font>
-            <Font size="18.0" />
+            <Font size="30.0" />
          </font></Label>
-      <Label fx:id="HourTens" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
-         <font>
-            <Font size="96.0" />
-         </font></Label>
-      <Label fx:id="HourUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="223.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+      <Label fx:id="HourTens" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font></Label>
-      <Label fx:id="MinuteTens" alignment="CENTER" contentDisplay="CENTER" layoutX="518.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+      <Label fx:id="HourUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="170.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font></Label>
-      <Label fx:id="MinuteUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="732.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
+      <Label fx:id="MinuteTens" alignment="CENTER" contentDisplay="CENTER" layoutX="338.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font></Label>
-      <MenuBar fx:id="Menu" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="911.0">
+      <Label fx:id="MinuteUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="498.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+         <font>
+            <Font size="96.0" />
+         </font></Label>
+      <MenuBar fx:id="Menu" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="873.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -46,12 +47,24 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="Info">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#GitHub" text="Github Repository" />
               <MenuItem mnemonicParsing="false" onAction="#About" text="About" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
+      <Button fx:id="CloseButton" contentDisplay="CENTER" layoutX="896.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#GitHub" prefHeight="35.0" prefWidth="40.0" text="X" />
+      <Label fx:id="SecondUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="835.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+         <font>
+            <Font size="96.0" />
+         </font>
+      </Label>
+      <Label fx:id="SecondTens" alignment="CENTER" contentDisplay="CENTER" layoutX="675.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+         <font>
+            <Font size="96.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

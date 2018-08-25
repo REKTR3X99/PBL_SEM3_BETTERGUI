@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 
 
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,47 +26,52 @@ import java.util.List;
 public class Controller implements Initializable {
 
 
-    private ObservableList<String> CountryList;
-    private ObservableList<String> CapitalList;
-    private ObservableList<String> GMTOffset;
+    private ObservableList<String> CountryList; //Lists for all the Countries in the list
+    private ObservableList<String> CapitalList; //List for all the Capitals corresponding to the country
+    private ObservableList<String> GMTOffset; //Offset for all the country
 
 
 
     @FXML
-     private ComboBox CountryComboBox;
+     private ComboBox CountryComboBox; //ComboBox for selecting the country
 
     @FXML
-    private Label CapitalDisplayLabel;
+    private Label CapitalDisplayLabel; //Displays the Capital of the country
 
     @FXML
-    private Label HourTens;
+    private Label HourTens; //Displays the First number of the Clock which is in 24 hour format
 
     @FXML
-    private Label  HourUnits;
+    private Label  HourUnits; //Displays second number
 
     @FXML
-    private Label MinuteTens;
+    private Label MinuteTens; //Displays first digit of Minute
 
     @FXML
-    private Label MinuteUnits;
+    private Label MinuteUnits; //Displays second digit of Minute
 
     @FXML
-    private MenuBar Menu;
+    private Label SecondTens;
 
     @FXML
-    private Button AboutButton;
+    private Label SecondUnits;
 
+
+    //Initializing the frame and adding all the names of countries
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        BufferedReader CountryListReader = null;
-        BufferedReader CapitalListReader  = null;
-        BufferedReader OffsetListReader = null;
+        BufferedReader CountryListReader = null; //BufferedReader for Country
+        BufferedReader CapitalListReader  = null;  //BufferedReader for Capital
+        BufferedReader OffsetListReader = null; //BufferedReader for the GMT Offset List
 
+        //Set of Strings which take a temporary input
         String CountryLine  = "";
         String CapitalLine = "";
         String OffsetLine = "";
 
+
+        //Array for temporary storage
         List<String>CoL = new ArrayList<>();
         List<String>CaL = new ArrayList<>();
         List<String>OfL = new ArrayList<>();
@@ -76,10 +80,9 @@ public class Controller implements Initializable {
         try
         {
             //Reading data
-
-            CountryListReader = new BufferedReader(new FileReader("Resources/CountryNames.dat"));
-            CapitalListReader = new BufferedReader(new FileReader("Resources/CapitalNames.dat"));
-            OffsetListReader = new BufferedReader(new FileReader("Resources/TimeZoneOffset.dat"));
+            CountryListReader = new BufferedReader(new FileReader("Resources/CountryNames.dat")); //Reading Country data
+            CapitalListReader = new BufferedReader(new FileReader("Resources/CapitalNames.dat")); //Reading Capital data
+            OffsetListReader = new BufferedReader(new FileReader("Resources/TimeZoneOffset.dat")); //Reading the offset data
 
         }catch(IOException e) //Catching IOException and alerting the user
         {
@@ -89,16 +92,18 @@ public class Controller implements Initializable {
             FileReadError.showAndWait();
         }
 
-        int Index = 0;
+        int Index = 0; //Index for the List
 
-        while(CountryLine!= null && CapitalLine!= null && OffsetLine != null && Index <=99)
+        //Reading every line from each of the list and assigning it to a temporary variable <File-ContentLine>
+        while(CountryLine!= null && CapitalLine!= null && OffsetLine != null && Index <=99) //Going till any of the lines go null and Index is less than 99
+            //Note : Index has to be explicitly specified to be less than  99 or else the List will have a blank entry from file termination
         {
             try {
-                CountryLine = CountryListReader.readLine();
-                CapitalLine = CapitalListReader.readLine();
-                OffsetLine = OffsetListReader.readLine();
+                CountryLine = CountryListReader.readLine(); //Read a line from the Country List
+                CapitalLine = CapitalListReader.readLine(); //Read from Capital
+                OffsetLine = OffsetListReader.readLine(); //Read from the GMT Offset table
 
-            } catch (IOException e) {
+            } catch (IOException e) { //Catching any IO exceptions thrown and alerting the user
 
                 Alert FileReadError = new Alert(Alert.AlertType.ERROR);
                 FileReadError.setHeaderText("File(s) cannot be read");
@@ -106,20 +111,33 @@ public class Controller implements Initializable {
                 FileReadError.showAndWait();
             }
 
+            //Adding the read lines into a Temporary Array List
             CoL.add(Index, CountryLine);
             CaL.add(Index, CapitalLine);
             OfL.add(Index, OffsetLine);
 
-            Index++;
+            Index++; //Incrementing the Index
+
+            /*
+            *
+            * Note : Index isn't necessary for the proper generation of the List.
+            * I just added it so that it doesn't mess the order just to be sure.
+            * I will probably remove this in the final version
+            *
+            * */
 
 
         }
 
+        //Converting the ArrayList into ObservableArrayList since that's what javafx requires
         CountryList = FXCollections.observableArrayList(CoL);
         CapitalList = FXCollections.observableArrayList(CaL);
         GMTOffset = FXCollections.observableArrayList(OfL);
 
+        //Setting Default value to Afghanistan or it would just show a blank entry
         CountryComboBox.setValue("Afghanistan");
+
+        //Setting the CountryList as an Item.
         CountryComboBox.setItems(CountryList);
 
 
@@ -129,8 +147,12 @@ public class Controller implements Initializable {
     public void Capital(ActionEvent e)
     {
 
+        //Setting the label text by getting the index of the country and matching it to the same index in the capital list
         CapitalDisplayLabel.setText(CapitalList.get((CountryComboBox.getSelectionModel().getSelectedIndex())));
-        DisplayTime();
+
+
+        //Make this real time so that the time also changes.
+        DisplayTime(); //Display whatever the time is in the given region
 
     }
 
@@ -141,13 +163,17 @@ public class Controller implements Initializable {
         Calendar CalToGetTime = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 
 
+
         int GMTHour = CalToGetTime.get(Calendar.HOUR_OF_DAY); //Get the current GMT Hour
         int GMTMinute = CalToGetTime.get(Calendar.MINUTE); //Get the current GMT time
+        int GMTSeconds = CalToGetTime.get(Calendar.SECOND);
+
+
 
         String checker = GMTOffset.get(CountryComboBox.getSelectionModel().getSelectedIndex());
         String HourString; //To Store the hours
         String MinuteString; //To Store the minutes
-        boolean DoesExist = true;
+        boolean DoesExist; //Initially is true
 
         //Checking if the checker contains "UTC" or not
         /*
@@ -253,7 +279,7 @@ public class Controller implements Initializable {
                 JOptionPane.showMessageDialog(panel,"Parsing error for countries behind GMT", "Error", JOptionPane.ERROR_MESSAGE);  //Displaying error
             }
         }
-        System.out.println(GMTHour + ":" + GMTMinute);
+
 
         HourUnits.setText(String.valueOf(GMTHour % 10));
         GMTHour/=10;
@@ -262,6 +288,39 @@ public class Controller implements Initializable {
         MinuteUnits.setText(String.valueOf(GMTHour % 10));
         GMTMinute/=10;
         MinuteTens.setText(String.valueOf(GMTMinute));
+
+        SecondUnits.setText(String.valueOf(GMTSeconds % 10));
+        GMTSeconds/=10;
+        SecondTens.setText(String.valueOf(GMTSeconds));
+
+
+
+        //Need to add an updater
+        Thread SecondsUpdaterThread = new Thread(()->
+        {
+
+            int Seconds;
+            while(true) {
+                Seconds = CalToGetTime.get(Calendar.SECOND);
+
+                System.out.println(Seconds);
+                SecondUnits.setText(String.valueOf(Seconds % 10));
+                Seconds /= 10;
+                SecondTens.setText(String.valueOf(Seconds));
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException IE) {
+                    System.out.println(IE);
+                }
+
+            }
+
+        });
+
+        SecondsUpdaterThread.start();
+
+
 
     }
 
@@ -280,7 +339,7 @@ public class Controller implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("AddLayout.fxml"));
 
 
-        Scene scene = new Scene(root, 400, 600);
+        Scene scene = new Scene(root, 650, 400);
         scene.setRoot(root);
         AddLayoutStage.setTitle("Set Value");
         AddLayoutStage.setScene(scene);
@@ -296,6 +355,19 @@ public class Controller implements Initializable {
         AboutField.setHeaderText("Team");
         AboutField.setContentText("Ajay Nair \n Parth Nair\n Gokul Chathankulam");
         AboutField.showAndWait();
+    }
+
+    @FXML
+    void GitHub(ActionEvent e)
+    {
+        Runtime runtime = Runtime.getRuntime();
+
+        try {
+            Process BrowserProcess = runtime.exec("firefox https://github.com/REKTR3X99/PBL_SEM3_BETTERGUI");
+        }catch(Exception Pe)
+        {
+            Pe.printStackTrace();
+        }
     }
 
 }
