@@ -13,11 +13,17 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="974.0" style="-fx-background-image: /Resources/world_Map.jpg;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
    <children>
-      <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" onAction="#Capital" prefHeight="49.0" prefWidth="486.0" />
-      <Label fx:id="CapitalDisplayLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="509.0" layoutY="80.0" prefHeight="41.0" prefWidth="423.0" style="-fx-border-color: grey; -fx-border-width: 4; -fx-border-radius: 10;" textAlignment="CENTER">
+      <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" onAction="#Capital" prefHeight="49.0" prefWidth="486.0">
+         <tooltip>
+            <Tooltip text="Select a Country from the list" />
+         </tooltip></ComboBox>
+      <Label fx:id="CapitalDisplayLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="509.0" layoutY="80.0" prefHeight="51.0" prefWidth="449.0" style="-fx-border-color: grey; -fx-border-width: 4; -fx-border-radius: 10;" textAlignment="CENTER">
          <font>
             <Font size="30.0" />
-         </font></Label>
+         </font>
+         <tooltip>
+            <Tooltip text="Here you will see the names of the capital" />
+         </tooltip></Label>
       <Label fx:id="HourTens" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
@@ -34,17 +40,11 @@
          <font>
             <Font size="96.0" />
          </font></Label>
-      <MenuBar fx:id="Menu" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="873.0">
+      <MenuBar fx:id="Menu" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="883.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#AddItem" text="Add Item" />
               <MenuItem mnemonicParsing="false" onAction="#close" text="Quit" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Info">
@@ -55,7 +55,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="CloseButton" contentDisplay="CENTER" layoutX="896.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#GitHub" prefHeight="35.0" prefWidth="40.0" text="X" />
+      <Button fx:id="CloseButton" contentDisplay="CENTER" layoutX="907.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" onMouseClicked="#GitHub" prefHeight="35.0" prefWidth="51.0" text="X" />
       <Label fx:id="SecondUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="835.0" layoutY="200.0" prefHeight="120.0" prefWidth="120.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
@@ -66,5 +66,14 @@
             <Font size="96.0" />
          </font>
       </Label>
+      <TextField fx:id="CurrencyFromText" layoutX="226.0" layoutY="416.0" prefHeight="49.0" prefWidth="182.0" style="-fx-border-width: 10;" text="1" />
+      <ComboBox fx:id="CurrencyFrom" layoutX="38.0" layoutY="416.0" prefHeight="49.0" prefWidth="182.0" />
+      <ComboBox fx:id="CurrencyTo" layoutX="504.0" layoutY="415.0" prefHeight="49.0" prefWidth="182.0" />
+      <Label fx:id="CurrencyToLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="696.0" layoutY="415.0" prefHeight="35.0" prefWidth="182.0" style="-fx-border-color: grey; -fx-border-width: 4; -fx-border-radius: 0;" textAlignment="CENTER">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Button fx:id="CurrencyConvertButton" layoutX="386.0" layoutY="518.0" mnemonicParsing="false" onAction="#CurrencyConvertFunction" prefHeight="43.0" prefWidth="145.0" text="Convert" />
    </children>
 </Pane>

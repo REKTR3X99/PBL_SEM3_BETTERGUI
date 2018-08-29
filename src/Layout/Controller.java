@@ -1,5 +1,6 @@
 package Layout;
 
+import com.sun.xml.internal.ws.api.model.CheckedException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,9 +19,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Controller implements Initializable {
@@ -29,6 +33,9 @@ public class Controller implements Initializable {
     private ObservableList<String> CountryList; //Lists for all the Countries in the list
     private ObservableList<String> CapitalList; //List for all the Capitals corresponding to the country
     private ObservableList<String> GMTOffset; //Offset for all the country
+    private ObservableList<String> CurrencyData;
+
+
 
 
 
@@ -56,6 +63,26 @@ public class Controller implements Initializable {
     @FXML
     private Label SecondUnits;
 
+    @FXML
+    private ComboBox CurrencyFrom;
+
+    @FXML
+    private ComboBox CurrencyTo;
+
+    @FXML
+    private TextField CurrencyFromText;
+
+    @FXML
+    private Label CurrencyToLabel;
+
+    @FXML
+    Button CurrencyConvertButton;
+
+
+
+    //Setting the Calendar to read GMT Time
+    private Calendar CalToGetTime = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+
 
     //Initializing the frame and adding all the names of countries
     @FXML
@@ -64,17 +91,19 @@ public class Controller implements Initializable {
         BufferedReader CountryListReader = null; //BufferedReader for Country
         BufferedReader CapitalListReader  = null;  //BufferedReader for Capital
         BufferedReader OffsetListReader = null; //BufferedReader for the GMT Offset List
-
+        BufferedReader CurrencyReader = null;
         //Set of Strings which take a temporary input
         String CountryLine  = "";
         String CapitalLine = "";
         String OffsetLine = "";
+        String CurrencyLine = "";
 
 
         //Array for temporary storage
         List<String>CoL = new ArrayList<>();
         List<String>CaL = new ArrayList<>();
         List<String>OfL = new ArrayList<>();
+        List<String>CdL = new ArrayList<>();
 
 
         try
@@ -83,6 +112,7 @@ public class Controller implements Initializable {
             CountryListReader = new BufferedReader(new FileReader("Resources/CountryNames.dat")); //Reading Country data
             CapitalListReader = new BufferedReader(new FileReader("Resources/CapitalNames.dat")); //Reading Capital data
             OffsetListReader = new BufferedReader(new FileReader("Resources/TimeZoneOffset.dat")); //Reading the offset data
+            CurrencyReader = new BufferedReader(new FileReader("Resources/CurrencyData.dat"));
 
         }catch(IOException e) //Catching IOException and alerting the user
         {
@@ -102,6 +132,7 @@ public class Controller implements Initializable {
                 CountryLine = CountryListReader.readLine(); //Read a line from the Country List
                 CapitalLine = CapitalListReader.readLine(); //Read from Capital
                 OffsetLine = OffsetListReader.readLine(); //Read from the GMT Offset table
+                CurrencyLine = CurrencyReader.readLine();
 
             } catch (IOException e) { //Catching any IO exceptions thrown and alerting the user
 
@@ -115,6 +146,15 @@ public class Controller implements Initializable {
             CoL.add(Index, CountryLine);
             CaL.add(Index, CapitalLine);
             OfL.add(Index, OffsetLine);
+
+            try {
+                if (!CdL.contains(String.valueOf(CurrencyLine))) {
+                    CdL.add(CurrencyLine);
+                }
+            }catch(Exception E)
+            {
+                System.out.println(E);
+            }
 
             Index++; //Incrementing the Index
 
@@ -134,12 +174,24 @@ public class Controller implements Initializable {
         CapitalList = FXCollections.observableArrayList(CaL);
         GMTOffset = FXCollections.observableArrayList(OfL);
 
-        //Setting Default value to Afghanistan or it would just show a blank entry
-        CountryComboBox.setValue("Afghanistan");
+        Collections.sort(CdL);
+        CurrencyData = FXCollections.observableArrayList(CdL);
 
         //Setting the CountryList as an Item.
         CountryComboBox.setItems(CountryList);
 
+        //Setting The currency Lists
+        CurrencyFrom.setItems(CurrencyData);
+
+        CurrencyTo.setItems(CurrencyData);
+
+
+        //Setting Default value to Afghanistan or it would just show a blank entry
+        CountryComboBox.setValue("Afghanistan");
+
+        CurrencyFrom.setValue("AFN");
+
+        CurrencyTo.setValue("AFN");
 
     }
 
@@ -159,8 +211,7 @@ public class Controller implements Initializable {
     @FXML
     void DisplayTime()
     {
-        //Setting the Calendar to read GMT Time
-        Calendar CalToGetTime = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+
 
 
 
@@ -293,59 +344,101 @@ public class Controller implements Initializable {
         GMTSeconds/=10;
         SecondTens.setText(String.valueOf(GMTSeconds));
 
+        //Thread UpdaterThread = new Thread(this::Updater);
+//
+        //if(UpdaterThread.isAlive())
+        //{
+        //    UpdaterThread.interrupt();
+        //}else {
+        //    UpdaterThread.start();
+        //}
+
+        //CurrencyConvert();
+    }
+
+    void Updater()
+    {
+        int Seconds = CalToGetTime.get(Calendar.SECOND);
+        long ProcessStartTime;
+        long Elapsedtime;
+
+        try {
+            while (true) {
+                 ProcessStartTime = System.currentTimeMillis();
+                 Elapsedtime = System.currentTimeMillis() - ProcessStartTime;
 
 
-        //Need to add an updater
-        Thread SecondsUpdaterThread = new Thread(()->
-        {
-
-            int Seconds;
-            while(true) {
+                CalToGetTime.setTimeInMillis(Elapsedtime + CalToGetTime.getTime().getTime());
                 Seconds = CalToGetTime.get(Calendar.SECOND);
 
-                System.out.println(Seconds);
-                SecondUnits.setText(String.valueOf(Seconds % 10));
-                Seconds /= 10;
-                SecondTens.setText(String.valueOf(Seconds));
+                System.out.println(CalToGetTime.getTime());
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException IE) {
-                    System.out.println(IE);
-                }
 
+                Thread.sleep(1000);
             }
+        }catch(Exception IE)
+        {
+            IE.printStackTrace();
+        }
+    }
 
-        });
 
-        SecondsUpdaterThread.start();
+    @FXML
+    void CurrencyConvertFunction(ActionEvent e)
+    {
 
 
+        if(CurrencyFromText.getText().matches("[a-z^A-Z]+"))
+        {
+            Alert WrongEntry = new Alert(Alert.AlertType.ERROR);
+            WrongEntry.setHeaderText("Wrong Value inserted");
+            WrongEntry.setContentText("Please Enter a proper value and continue");
+            WrongEntry.showAndWait();
+
+            CurrencyFromText.setText("1");
+
+        }
+
+        URL FinanceURL;
+        int IndexCurrencyTo= CurrencyTo.getSelectionModel().getSelectedIndex();
+        int IndexCurrencyFrom = CurrencyFrom.getSelectionModel().getSelectedIndex();
+
+        String CurrencyToConvert = CurrencyData.get(IndexCurrencyTo);
+        String CurrencyFromConvert = CurrencyData.get(IndexCurrencyFrom);
+
+        String ConvertedAmount =  null;
+        float FinalAmount = 0.0f;
+
+        try {
+            FinanceURL = new URL("http://free.currencyconverterapi.com/api/v5/convert?q="+CurrencyFromConvert+"_"+ CurrencyToConvert+"&compact=y");
+            BufferedReader URLReturnDataReader = new BufferedReader(new InputStreamReader(FinanceURL.openStream()));
+            ConvertedAmount = URLReturnDataReader.readLine();
+        }catch(Exception ParsingException)
+        {
+            Alert FinanceErrorAlert = new Alert(Alert.AlertType.ERROR);
+
+            FinanceErrorAlert.setHeaderText("Connection Error");
+            FinanceErrorAlert.setContentText("Error connecting the server");
+            FinanceErrorAlert.showAndWait();
+        }
+
+
+        //RegEx to extract the ratio
+        Pattern RegExPattern = Pattern.compile("[0-9^.]+"); //Match any numbers ranging from 0 to 9 and decimal point
+        Matcher MatcherForPattern = RegExPattern.matcher(ConvertedAmount);
+
+        while(MatcherForPattern.find())
+        {
+            System.out.println(MatcherForPattern.group());
+            FinalAmount = Float.valueOf(MatcherForPattern.group());
+        }
+        CurrencyToLabel.setText(String.valueOf(Float.valueOf(CurrencyFromText.getText()) * FinalAmount));
 
     }
 
     @FXML
-    void close(ActionEvent e)
-    {
+    void close(ActionEvent e) {
         Platform.exit();
-    }
-
-    @FXML
-    void AddItem(ActionEvent e) throws Exception
-    {
-
-        Stage AddLayoutStage = new Stage();
-
-        Parent root = FXMLLoader.load(getClass().getResource("AddLayout.fxml"));
-
-
-        Scene scene = new Scene(root, 650, 400);
-        scene.setRoot(root);
-        AddLayoutStage.setTitle("Set Value");
-        AddLayoutStage.setScene(scene);
-        AddLayoutStage.show();
-
-
     }
 
     @FXML
