@@ -200,49 +200,50 @@ public class Controller implements Initializable {
         CapitalDisplayLabel.setText(CapitalList.get((CountryComboBox.getSelectionModel().getSelectedIndex())));
 
 
-        //Platform.runLater(()->
-        //{
-        //    Thread UpdaterThread = new Thread(this::Updater);
-        //    UpdaterThread.start();
-        //});
+        Platform.runLater(()->
+        {
+            DisplayTime(); //Display whatever the time is in the given region
+
+            //Updater();
+
+        });
 
 
-        DisplayTime(); //Display whatever the time is in the given region
 
 
-        //TODO Need to fix this lambda function for independent threading
-        Runnable Updater = new Runnable() {
-            @Override
-            public void run() {
-                Platform.runLater(()->
-                {
-                    long MiliSecond;
-                    long Seconds;
-
-                    while (true) {
-                        MiliSecond = System.currentTimeMillis();
-                        Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
-
-                        System.out.println(Seconds);
-
-                        SecondUnits.setText(String.valueOf(Seconds % 10));
-                        Seconds /= 10;
-                        SecondTens.setText(String.valueOf(Seconds));
-
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception UnhandledException) {
-                            System.err.println(UnhandledException);
-                        }
-
-                    }
-
-                });
-            }
-        };
-
-        Thread UpdaterThread = new Thread(Updater);
-        UpdaterThread.start();
+        ////TODO Need to fix this lambda function for independent threading
+        //Runnable Updater = new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        Platform.runLater(()->
+        //        {
+        //            long MiliSecond;
+        //            long Seconds;
+//
+        //            while (true) {
+        //                MiliSecond = System.currentTimeMillis();
+        //                Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
+//
+        //                System.out.println(Seconds);
+//
+        //                SecondUnits.setText(String.valueOf(Seconds % 10));
+        //                Seconds /= 10;
+        //                SecondTens.setText(String.valueOf(Seconds));
+//
+        //                try {
+        //                    Thread.sleep(1000);
+        //                } catch (Exception UnhandledException) {
+        //                    System.err.println(UnhandledException);
+        //                }
+//
+        //            }
+//
+        //        });
+        //    }
+        //};
+//
+        //Thread UpdaterThread = new Thread(Updater);
+        //UpdaterThread.start();
 
 
 
@@ -389,11 +390,37 @@ public class Controller implements Initializable {
         SecondTens.setText(String.valueOf(GMTSeconds));
 
 
-        
+
+
+
+        Task UpdateTime = new Task() {
+            @Override
+            protected Void call() throws Exception {
+
+                long MiliSecond;
+                long Seconds;
+
+                while (true) {
+                    MiliSecond = System.currentTimeMillis();
+                    Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
+
+                    System.out.println(Seconds);
+
+                    SecondUnits.setText(String.valueOf(Seconds % 10));
+                    Seconds /= 10;
+                    SecondTens.setText(String.valueOf(Seconds));
+
+
+                }
+
+
+            }
+        };
+
+        UpdateTime.run();
+
 
     }
-
-
 
 
     @FXML
@@ -489,3 +516,5 @@ public class Controller implements Initializable {
     }
 
 }
+
+
