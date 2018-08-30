@@ -3,11 +3,13 @@ package Layout;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javax.swing.*;
+import javafx.scene.layout.Pane;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,11 +28,12 @@ public class Controller implements Initializable {
     private ObservableList<String> CountryList; //Lists for all the Countries in the list
     private ObservableList<String> CapitalList; //List for all the Capitals corresponding to the country
     private ObservableList<String> GMTOffset; //Offset for all the country
-    private ObservableList<String> CurrencyData;
+    private ObservableList<String> CurrencyData; //Currency data
 
 
 
-
+    @FXML
+    private Pane BasePane;
 
     @FXML
      private ComboBox CountryComboBox; //ComboBox for selecting the country
@@ -50,16 +54,16 @@ public class Controller implements Initializable {
     private Label MinuteUnits; //Displays second digit of Minute
 
     @FXML
-    private Label SecondTens;
+    private Label SecondTens; //Displays the first digit of Seconds
 
     @FXML
-    private Label SecondUnits;
+    private Label SecondUnits; //Displays the second digit of Seconds
 
     @FXML
-    private ComboBox CurrencyFrom;
+    private ComboBox CurrencyFrom; //To Choose the currency from
 
     @FXML
-    private ComboBox CurrencyTo;
+    private ComboBox CurrencyTo; //To Choose where to convert the currency
 
     @FXML
     private TextField CurrencyFromText;
@@ -68,7 +72,7 @@ public class Controller implements Initializable {
     private Label CurrencyToLabel;
 
     @FXML
-    Button CurrencyConvertButton;
+    private Button CurrencyConvertButton;
 
 
 
@@ -96,6 +100,7 @@ public class Controller implements Initializable {
         List<String>CaL = new ArrayList<>();
         List<String>OfL = new ArrayList<>();
         List<String>CdL = new ArrayList<>();
+
 
 
         try
@@ -145,7 +150,7 @@ public class Controller implements Initializable {
                 }
             }catch(Exception E)
             {
-                System.out.println(E);
+                System.err.println(E); //err to print errors
             }
 
             Index++; //Incrementing the Index
@@ -203,10 +208,6 @@ public class Controller implements Initializable {
     @FXML
     void DisplayTime()
     {
-
-
-
-
         int GMTHour = CalToGetTime.get(Calendar.HOUR_OF_DAY); //Get the current GMT Hour
         int GMTMinute = CalToGetTime.get(Calendar.MINUTE); //Get the current GMT time
         int GMTSeconds = CalToGetTime.get(Calendar.SECOND);
@@ -297,8 +298,12 @@ public class Controller implements Initializable {
                 }
             }catch(Exception e)
             {
-                final  JPanel panel = new JPanel(); //JPanel for error
-                JOptionPane.showMessageDialog(panel,"Parsing Error for countries Ahead of GMT", "Error", JOptionPane.ERROR_MESSAGE);  //Displaying error
+                Alert ParsingErrorAheadGMT = new Alert(Alert.AlertType.ERROR);//Displaying error
+
+                ParsingErrorAheadGMT.setHeaderText("Parsing Error");
+                ParsingErrorAheadGMT.setContentText("An error have occurred while parsing the timezones behind GMT ");
+                ParsingErrorAheadGMT.showAndWait();
+
             }
         }else if(checker.startsWith("-") && DoesExist) //If the country is behind GMT
         {
@@ -318,8 +323,12 @@ public class Controller implements Initializable {
                 }
             }catch(Exception e)
             {
-                final  JPanel panel = new JPanel(); //JPanel for error
-                JOptionPane.showMessageDialog(panel,"Parsing error for countries behind GMT", "Error", JOptionPane.ERROR_MESSAGE);  //Displaying error
+                Alert ParsingErrorBehindGMT = new Alert(Alert.AlertType.ERROR);//Displaying error
+
+                ParsingErrorBehindGMT.setHeaderText("Parsing Error");
+                ParsingErrorBehindGMT.setContentText("An error have occurred while parsing the timezones behind GMT ");
+                ParsingErrorBehindGMT.showAndWait();
+
             }
         }
 
@@ -336,43 +345,42 @@ public class Controller implements Initializable {
         GMTSeconds/=10;
         SecondTens.setText(String.valueOf(GMTSeconds));
 
-        //Thread UpdaterThread = new Thread(this::Updater);
-//
-        //if(UpdaterThread.isAlive())
-        //{
-        //    UpdaterThread.interrupt();
-        //}else {
-        //    UpdaterThread.start();
-        //}
+        new Thread(this::Updater).start();
+        
 
-        //CurrencyConvert();
     }
 
     void Updater()
     {
-        int Seconds = CalToGetTime.get(Calendar.SECOND);
-        long ProcessStartTime;
-        long Elapsedtime;
 
-        try {
-            while (true) {
-                 ProcessStartTime = System.currentTimeMillis();
-                 Elapsedtime = System.currentTimeMillis() - ProcessStartTime;
+        Platform.runLater((new Runnable() {
+            @Override
+            public void run() {
 
+                long MiliSecond;
+                long Seconds;
 
-                CalToGetTime.setTimeInMillis(Elapsedtime + CalToGetTime.getTime().getTime());
-                Seconds = CalToGetTime.get(Calendar.SECOND);
+                while(true) {
+                    MiliSecond = System.currentTimeMillis();
+                    Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
 
-                System.out.println(CalToGetTime.getTime());
+                    System.out.println(Seconds);
 
+                    SecondUnits.setText(String.valueOf(Seconds % 10));
+                    Seconds /= 10;
+                    SecondTens.setText(String.valueOf(Seconds));
 
-                Thread.sleep(1000);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception UnhandledException) {
+                        System.err.println(UnhandledException);
+                    }
+                }
+
             }
-        }catch(Exception IE)
-        {
-            IE.printStackTrace();
-        }
+        }));
     }
+
 
 
     @FXML
@@ -380,7 +388,10 @@ public class Controller implements Initializable {
     {
 
 
-        if(CurrencyFromText.getText().matches("[a-z^A-Z]+"))
+        //Checking if the given input is only text or not.
+
+        //If given input is not matching numbers 0 to 9, then its an invalid input and set text to 1
+        if(!CurrencyFromText.getText().matches("[0-9]+"))
         {
             Alert WrongEntry = new Alert(Alert.AlertType.ERROR);
             WrongEntry.setHeaderText("Wrong Value inserted");
@@ -391,9 +402,12 @@ public class Controller implements Initializable {
 
         }
 
-        URL FinanceURL;
-        int IndexCurrencyTo= CurrencyTo.getSelectionModel().getSelectedIndex();
-        int IndexCurrencyFrom = CurrencyFrom.getSelectionModel().getSelectedIndex();
+
+        URL FinanceURL; //URL to which the link parsed will be opened
+
+
+        int IndexCurrencyTo= CurrencyTo.getSelectionModel().getSelectedIndex(); //Get the Currency which we have
+        int IndexCurrencyFrom = CurrencyFrom.getSelectionModel().getSelectedIndex(); //Get the currency to which we have to convert
 
         String CurrencyToConvert = CurrencyData.get(IndexCurrencyTo);
         String CurrencyFromConvert = CurrencyData.get(IndexCurrencyFrom);
@@ -402,8 +416,13 @@ public class Controller implements Initializable {
         float FinalAmount = 0.0f;
 
         try {
+            //Open Link
             FinanceURL = new URL("http://free.currencyconverterapi.com/api/v5/convert?q="+CurrencyFromConvert+"_"+ CurrencyToConvert+"&compact=y");
+
+            //Read contents of link
             BufferedReader URLReturnDataReader = new BufferedReader(new InputStreamReader(FinanceURL.openStream()));
+
+            //ConvertedAmount basically has the entire contents of the webpage
             ConvertedAmount = URLReturnDataReader.readLine();
         }catch(Exception ParsingException)
         {
@@ -415,13 +434,14 @@ public class Controller implements Initializable {
         }
 
 
-        //RegEx to extract the ratio
+
+        //RegEx to extract the ratio from the ConvertedAmount which contains the entire webpage
         Pattern RegExPattern = Pattern.compile("[0-9^.]+"); //Match any numbers ranging from 0 to 9 and decimal point
         Matcher MatcherForPattern = RegExPattern.matcher(ConvertedAmount);
 
         while(MatcherForPattern.find())
         {
-            System.out.println(MatcherForPattern.group());
+            System.out.println(MatcherForPattern.group()); //printing for reference
             FinalAmount = Float.valueOf(MatcherForPattern.group());
         }
         CurrencyToLabel.setText(String.valueOf(Float.valueOf(CurrencyFromText.getText()) * FinalAmount));
@@ -449,9 +469,9 @@ public class Controller implements Initializable {
 
         try {
             Process BrowserProcess = runtime.exec("firefox https://github.com/REKTR3X99/PBL_SEM3_BETTERGUI");
-        }catch(Exception Pe)
+        }catch(Exception ProcessException)
         {
-            Pe.printStackTrace();
+            ProcessException.printStackTrace();
         }
     }
 
