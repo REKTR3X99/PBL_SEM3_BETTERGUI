@@ -1,5 +1,6 @@
 package Layout;
 
+import com.sun.glass.ui.Window;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import sun.nio.ch.sctp.Shutdown;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -210,43 +212,6 @@ public class Controller implements Initializable {
 
 
 
-
-        ////TODO Need to fix this lambda function for independent threading
-        //Runnable Updater = new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        Platform.runLater(()->
-        //        {
-        //            long MiliSecond;
-        //            long Seconds;
-//
-        //            while (true) {
-        //                MiliSecond = System.currentTimeMillis();
-        //                Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
-//
-        //                System.out.println(Seconds);
-//
-        //                SecondUnits.setText(String.valueOf(Seconds % 10));
-        //                Seconds /= 10;
-        //                SecondTens.setText(String.valueOf(Seconds));
-//
-        //                try {
-        //                    Thread.sleep(1000);
-        //                } catch (Exception UnhandledException) {
-        //                    System.err.println(UnhandledException);
-        //                }
-//
-        //            }
-//
-        //        });
-        //    }
-        //};
-//
-        //Thread UpdaterThread = new Thread(Updater);
-        //UpdaterThread.start();
-
-
-
     }
 
     @FXML
@@ -390,42 +355,59 @@ public class Controller implements Initializable {
         SecondTens.setText(String.valueOf(GMTSeconds));
 
 
-
-
-
-        Task UpdateTime = new Task() {
+        //Lambda Function to update time after specific interval
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
-            protected Void call() throws Exception {
-
-                Platform.runLater(()->
-                {
+            public void run() {
+                Platform.runLater(()->{
                     long MiliSecond;
                     long Seconds;
-
-                    while (true) {
-                        MiliSecond = System.currentTimeMillis();
-                        Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
-
-                        System.out.println(Seconds);
-
-                        SecondUnits.setText(String.valueOf(Seconds % 10));
-                        Seconds /= 10;
-                        SecondTens.setText(String.valueOf(Seconds));
-                }
+                    long Hours;
+                    long Minutes = 0;
 
 
+                    MiliSecond = System.currentTimeMillis();
+                    Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
+                    //Minutes = TimeUnit.MILLISECONDS.toMinutes(MiliSecond);
+                    System.out.println(Seconds);
+                    System.out.println(Minutes);
 
+                    //Update Seconds
+                    SecondUnits.setText(String.valueOf(Seconds % 10));
+                    Seconds /= 10;
+                    SecondTens.setText(String.valueOf(Seconds));
+
+                    //Update Minutes
+                    MinuteUnits.setText(String.valueOf(Minutes % 10));
+                    Minutes /= 10;
+                    MinuteTens.setText(String.valueOf(Minutes));
                 });
-
-        return null;
             }
-        };
+        },  1 *1000, 10);
 
-        UpdateTime.run();
+        
+
 
 
     }
 
+    void Update()
+    {
+
+        long MiliSecond;
+        long Seconds;
+
+        //while (true) {
+            MiliSecond = System.currentTimeMillis();
+            Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
+            System.out.println(Seconds);
+            SecondUnits.setText(String.valueOf(Seconds % 10));
+            Seconds /= 10;
+            SecondTens.setText(String.valueOf(Seconds));
+        //}
+
+    }
 
     @FXML
     void CurrencyConvertFunction(ActionEvent e)

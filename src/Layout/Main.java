@@ -18,7 +18,7 @@ public class Main extends Application {
 
 
         Parent root= FXMLLoader.load(getClass().getResource("MainLayout.fxml")); //Setting the layout which is to be loaded i.e MainLayout.fxml
-        Scene scene = new Scene(root, 972 , 600); //Creating the scene Width  =  300 and Height = 275
+        Scene scene = new Scene(root, 972 , 600); //Creating the scene Width  =  972 and Height = 600
         scene.setRoot(root); //Setting the root of the scene
 
 
