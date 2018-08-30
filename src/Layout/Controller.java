@@ -397,18 +397,22 @@ public class Controller implements Initializable {
             @Override
             protected Void call() throws Exception {
 
-                long MiliSecond;
-                long Seconds;
+                Platform.runLater(()->
+                {
+                    long MiliSecond;
+                    long Seconds;
 
-                while (true) {
-                    MiliSecond = System.currentTimeMillis();
-                    Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
+                    while (true) {
+                        MiliSecond = System.currentTimeMillis();
+                        Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
 
-                    System.out.println(Seconds);
+                        System.out.println(Seconds);
 
-                    SecondUnits.setText(String.valueOf(Seconds % 10));
-                    Seconds /= 10;
-                    SecondTens.setText(String.valueOf(Seconds));
+                        SecondUnits.setText(String.valueOf(Seconds % 10));
+                        Seconds /= 10;
+                        SecondTens.setText(String.valueOf(Seconds));
+                });
+
 
 
                 }
