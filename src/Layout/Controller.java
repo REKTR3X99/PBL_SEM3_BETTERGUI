@@ -411,13 +411,13 @@ public class Controller implements Initializable {
                         SecondUnits.setText(String.valueOf(Seconds % 10));
                         Seconds /= 10;
                         SecondTens.setText(String.valueOf(Seconds));
-                });
-
-
-
                 }
 
 
+
+                });
+
+        return null;
             }
         };
 
