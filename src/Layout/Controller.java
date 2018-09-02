@@ -33,12 +33,11 @@ public class Controller implements Initializable {
     private ObservableList<String> CurrencyData; //Currency data
 
 
-
     @FXML
     private Pane BasePane;
 
     @FXML
-     private ComboBox CountryComboBox; //ComboBox for selecting the country
+    private ComboBox CountryComboBox; //ComboBox for selecting the country
 
     @FXML
     private Label CapitalDisplayLabel; //Displays the Capital of the country
@@ -47,7 +46,7 @@ public class Controller implements Initializable {
     private Label HourTens; //Displays the First number of the Clock which is in 24 hour format
 
     @FXML
-    private Label  HourUnits; //Displays second number
+    private Label HourUnits; //Displays second number
 
     @FXML
     private Label MinuteTens; //Displays first digit of Minute
@@ -77,43 +76,39 @@ public class Controller implements Initializable {
     private Button CurrencyConvertButton;
 
 
-
     //Setting the Calendar to read GMT Time
     private Calendar CalToGetTime = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 
 
     //Initializing the frame and adding all the names of countries
     @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle)
-    {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         BufferedReader CountryListReader = null; //BufferedReader for Country
-        BufferedReader CapitalListReader  = null;  //BufferedReader for Capital
+        BufferedReader CapitalListReader = null;  //BufferedReader for Capital
         BufferedReader OffsetListReader = null; //BufferedReader for the GMT Offset List
         BufferedReader CurrencyReader = null;
         //Set of Strings which take a temporary input
-        String CountryLine  = "";
+        String CountryLine = "";
         String CapitalLine = "";
         String OffsetLine = "";
         String CurrencyLine = "";
 
 
         //Array for temporary storage
-        List<String>CoL = new ArrayList<>();
-        List<String>CaL = new ArrayList<>();
-        List<String>OfL = new ArrayList<>();
-        List<String>CdL = new ArrayList<>();
+        List<String> CoL = new ArrayList<>();
+        List<String> CaL = new ArrayList<>();
+        List<String> OfL = new ArrayList<>();
+        List<String> CdL = new ArrayList<>();
 
 
-
-        try
-        {
+        try {
             //Reading data
             CountryListReader = new BufferedReader(new FileReader("Resources/CountryNames.dat")); //Reading Country data
             CapitalListReader = new BufferedReader(new FileReader("Resources/CapitalNames.dat")); //Reading Capital data
             OffsetListReader = new BufferedReader(new FileReader("Resources/TimeZoneOffset.dat")); //Reading the offset data
             CurrencyReader = new BufferedReader(new FileReader("Resources/CurrencyData.dat"));
 
-        }catch(IOException e) //Catching IOException and alerting the user
+        } catch (IOException e) //Catching IOException and alerting the user
         {
             Alert FileReadError = new Alert(Alert.AlertType.ERROR);
             FileReadError.setHeaderText("File(s) are missing");
@@ -124,8 +119,8 @@ public class Controller implements Initializable {
         int Index = 0; //Index for the List
 
         //Reading every line from each of the list and assigning it to a temporary variable <File-ContentLine>
-        while(CountryLine!= null && CapitalLine!= null && OffsetLine != null && Index <=99) //Going till any of the lines go null and Index is less than 99
-            //Note : Index has to be explicitly specified to be less than  99 or else the List will have a blank entry from file termination
+        while (CountryLine != null && CapitalLine != null && OffsetLine != null && Index <= 99) //Going till any of the lines go null and Index is less than 99
+        //Note : Index has to be explicitly specified to be less than  99 or else the List will have a blank entry from file termination
         {
             try {
                 CountryLine = CountryListReader.readLine(); //Read a line from the Country List
@@ -150,20 +145,19 @@ public class Controller implements Initializable {
                 if (!CdL.contains(String.valueOf(CurrencyLine))) {
                     CdL.add(CurrencyLine);
                 }
-            }catch(Exception E)
-            {
+            } catch (Exception E) {
                 System.err.println(E); //err to print errors
             }
 
             Index++; //Incrementing the Index
 
             /*
-            *
-            * Note : Index isn't necessary for the proper generation of the List.
-            * I just added it so that it doesn't mess the order just to be sure.
-            * I will probably remove this in the final version
-            *
-            * */
+             *
+             * Note : Index isn't necessary for the proper generation of the List.
+             * I just added it so that it doesn't mess the order just to be sure.
+             * I will probably remove this in the final version
+             *
+             * */
 
 
         }
@@ -195,14 +189,13 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    public void Capital(ActionEvent e)
-    {
+    public void Capital(ActionEvent e) {
 
         //Setting the label text by getting the index of the country and matching it to the same index in the capital list
         CapitalDisplayLabel.setText(CapitalList.get((CountryComboBox.getSelectionModel().getSelectedIndex())));
 
 
-        Platform.runLater(()->
+        Platform.runLater(() ->
         {
             DisplayTime(); //Display whatever the time is in the given region
 
@@ -210,17 +203,13 @@ public class Controller implements Initializable {
 
         });
 
-
-
     }
 
     @FXML
-    void DisplayTime()
-    {
+    void DisplayTime() {
         int GMTHour = CalToGetTime.get(Calendar.HOUR_OF_DAY); //Get the current GMT Hour
         int GMTMinute = CalToGetTime.get(Calendar.MINUTE); //Get the current GMT time
         int GMTSeconds = CalToGetTime.get(Calendar.SECOND);
-
 
 
         String checker = GMTOffset.get(CountryComboBox.getSelectionModel().getSelectedIndex());
@@ -232,8 +221,7 @@ public class Controller implements Initializable {
         /*
          * If It does have UTC it means that the time cannot be determined
          * */
-        if(!checker.contains("UTC"))
-        {
+        if (!checker.contains("UTC")) {
             /*
              * Format of the time in TimeZoneOffset.dat is (sign)X1X2.Y1Y2
              *
@@ -244,14 +232,13 @@ public class Controller implements Initializable {
              * substring of 1,3 is X1 and X2
              * substring of 4,6 is Y1 and Y2
              * */
-            HourString = checker.substring(1,3);
-            MinuteString = checker.substring(4,6);
+            HourString = checker.substring(1, 3);
+            MinuteString = checker.substring(4, 6);
             DoesExist = true; //Saying that the given value exists in the Zone Offset data
-        }else
-        {
+        } else {
             DoesExist = false;
             HourString = "0";
-            MinuteString ="0";
+            MinuteString = "0";
         }
 
 
@@ -283,10 +270,9 @@ public class Controller implements Initializable {
          * */
 
 
-        if(checker.startsWith("+") && DoesExist) //If the country is ahead GMT and does exists in the ZoneOffsetData
+        if (checker.startsWith("+") && DoesExist) //If the country is ahead GMT and does exists in the ZoneOffsetData
         {
-            try
-            {
+            try {
                 // offsetting the given GMTHour from the calendar by the Zone Offset from GMT
                 //For some reason  if I don't add 1 the time remains an hour behind so there's a 1
                 //Also converting HourString from String to Int
@@ -296,17 +282,16 @@ public class Controller implements Initializable {
                 //Also parsing the value of MinuteString to convert from String to Int
                 GMTMinute = GMTMinute + Integer.parseInt(MinuteString);
 
-                if(GMTHour >= 24) //Checking the addition exceeds or equals 24 hours
+                if (GMTHour >= 24) //Checking the addition exceeds or equals 24 hours
                 {
                     GMTHour = GMTHour - 24; //Negating by 24 incase it exceeds
                 }
 
-                if(GMTMinute >= 60) //Checking if minutes exceeds or equals 60 minute
+                if (GMTMinute >= 60) //Checking if minutes exceeds or equals 60 minute
                 {
                     GMTMinute = GMTMinute - 60; //If it does, negate by 60
                 }
-            }catch(Exception e)
-            {
+            } catch (Exception e) {
                 Alert ParsingErrorAheadGMT = new Alert(Alert.AlertType.ERROR);//Displaying error
 
                 ParsingErrorAheadGMT.setHeaderText("Parsing Error");
@@ -314,24 +299,20 @@ public class Controller implements Initializable {
                 ParsingErrorAheadGMT.showAndWait();
 
             }
-        }else if(checker.startsWith("-") && DoesExist) //If the country is behind GMT
+        } else if (checker.startsWith("-") && DoesExist) //If the country is behind GMT
         {
-            try
-            {
+            try {
                 GMTHour = GMTHour - Integer.parseInt(HourString);
                 GMTMinute = GMTMinute - Integer.parseInt(MinuteString);
 
-                if(GMTHour < 0)
-                {
+                if (GMTHour < 0) {
                     GMTHour = GMTHour + 24;
                 }
 
-                if(GMTMinute < 0)
-                {
+                if (GMTMinute < 0) {
                     GMTMinute = GMTMinute + 60;
                 }
-            }catch(Exception e)
-            {
+            } catch (Exception e) {
                 Alert ParsingErrorBehindGMT = new Alert(Alert.AlertType.ERROR);//Displaying error
 
                 ParsingErrorBehindGMT.setHeaderText("Parsing Error");
@@ -343,82 +324,77 @@ public class Controller implements Initializable {
 
 
         HourUnits.setText(String.valueOf(GMTHour % 10));
-        GMTHour/=10;
+        GMTHour /= 10;
         HourTens.setText(String.valueOf(GMTHour));
 
         MinuteUnits.setText(String.valueOf(GMTHour % 10));
-        GMTMinute/=10;
+        GMTMinute /= 10;
         MinuteTens.setText(String.valueOf(GMTMinute));
 
         SecondUnits.setText(String.valueOf(GMTSeconds % 10));
-        GMTSeconds/=10;
+        GMTSeconds /= 10;
         SecondTens.setText(String.valueOf(GMTSeconds));
 
 
         //Lambda Function to update time after specific interval
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        Timer SecondsTimer = new Timer();
+        SecondsTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     long MiliSecond;
                     long Seconds;
-                    long Hours;
-                    long Minutes = 0;
 
 
                     MiliSecond = System.currentTimeMillis();
-                    Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
-                    //Minutes = TimeUnit.MILLISECONDS.toMinutes(MiliSecond);
-                    System.out.println(Seconds);
-                    System.out.println(Minutes);
+                    Seconds = (MiliSecond / 1000) % 60;
+
+
+                    if (Seconds == 59) {
+                        long Minutes = CalToGetTime.get(Calendar.MINUTE);
+                        long MinHolder = Minutes;
+
+                        MinuteUnits.setText(String.valueOf(MinHolder % 10));
+                        MinHolder /= 10;
+                        MinuteTens.setText(String.valueOf(MinHolder));
+
+                        Minutes++;
+
+                        if(Minutes == 59)
+                        {
+                            long Hours = CalToGetTime.get(Calendar.HOUR_OF_DAY);
+                            long HourHolder = Hours;
+
+                            HourUnits.setText(String.valueOf(HourHolder % 10));
+                            HourHolder /=10;
+                            HourTens.setText(String.valueOf(HourHolder));
+
+                            Hours++;
+
+                        }
+                    }
+
 
                     //Update Seconds
                     SecondUnits.setText(String.valueOf(Seconds % 10));
                     Seconds /= 10;
                     SecondTens.setText(String.valueOf(Seconds));
 
-                    //Update Minutes
-                    MinuteUnits.setText(String.valueOf(Minutes % 10));
-                    Minutes /= 10;
-                    MinuteTens.setText(String.valueOf(Minutes));
                 });
             }
-        },  1 *1000, 10);
-
-        
-
-
+        }, 1000, 10);
 
     }
 
-    void Update()
-    {
-
-        long MiliSecond;
-        long Seconds;
-
-        //while (true) {
-            MiliSecond = System.currentTimeMillis();
-            Seconds = (MiliSecond / 1000) % 60;//TimeUnit.MILLISECONDS.toSeconds(MiliSecond);
-            System.out.println(Seconds);
-            SecondUnits.setText(String.valueOf(Seconds % 10));
-            Seconds /= 10;
-            SecondTens.setText(String.valueOf(Seconds));
-        //}
-
-    }
 
     @FXML
-    void CurrencyConvertFunction(ActionEvent e)
-    {
+    void CurrencyConvertFunction(ActionEvent e) {
 
 
         //Checking if the given input is only text or not.
 
         //If given input is not matching numbers 0 to 9, then its an invalid input and set text to 1
-        if(!CurrencyFromText.getText().matches("[0-9]+"))
-        {
+        if (!CurrencyFromText.getText().matches("[0-9]+")) {
             Alert WrongEntry = new Alert(Alert.AlertType.ERROR);
             WrongEntry.setHeaderText("Wrong Value inserted");
             WrongEntry.setContentText("Please Enter a proper value and continue");
@@ -432,26 +408,25 @@ public class Controller implements Initializable {
         URL FinanceURL; //URL to which the link parsed will be opened
 
 
-        int IndexCurrencyTo= CurrencyTo.getSelectionModel().getSelectedIndex(); //Get the Currency which we have
+        int IndexCurrencyTo = CurrencyTo.getSelectionModel().getSelectedIndex(); //Get the Currency which we have
         int IndexCurrencyFrom = CurrencyFrom.getSelectionModel().getSelectedIndex(); //Get the currency to which we have to convert
 
         String CurrencyToConvert = CurrencyData.get(IndexCurrencyTo);
         String CurrencyFromConvert = CurrencyData.get(IndexCurrencyFrom);
 
-        String ConvertedAmount =  null;
+        String ConvertedAmount = null;
         float FinalAmount = 0.0f;
 
         try {
             //Open Link
-            FinanceURL = new URL("http://free.currencyconverterapi.com/api/v5/convert?q="+CurrencyFromConvert+"_"+ CurrencyToConvert+"&compact=y");
+            FinanceURL = new URL("http://free.currencyconverterapi.com/api/v5/convert?q=" + CurrencyFromConvert + "_" + CurrencyToConvert + "&compact=y");
 
             //Read contents of link
             BufferedReader URLReturnDataReader = new BufferedReader(new InputStreamReader(FinanceURL.openStream()));
 
             //ConvertedAmount basically has the entire contents of the webpage
             ConvertedAmount = URLReturnDataReader.readLine();
-        }catch(Exception ParsingException)
-        {
+        } catch (Exception ParsingException) {
             Alert FinanceErrorAlert = new Alert(Alert.AlertType.ERROR);
 
             FinanceErrorAlert.setHeaderText("Connection Error");
@@ -460,13 +435,11 @@ public class Controller implements Initializable {
         }
 
 
-
         //RegEx to extract the ratio from the ConvertedAmount which contains the entire webpage
         Pattern RegExPattern = Pattern.compile("[0-9^.]+"); //Match any numbers ranging from 0 to 9 and decimal point
         Matcher MatcherForPattern = RegExPattern.matcher(ConvertedAmount);
 
-        while(MatcherForPattern.find())
-        {
+        while (MatcherForPattern.find()) {
             System.out.println(MatcherForPattern.group()); //printing for reference
             FinalAmount = Float.valueOf(MatcherForPattern.group());
         }
@@ -480,8 +453,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    void About(ActionEvent e)
-    {
+    void About(ActionEvent e) {
         Alert AboutField = new Alert(Alert.AlertType.INFORMATION);
         AboutField.setHeaderText("Team");
         AboutField.setContentText("Ajay Nair \n Parth Nair\n Gokul Chathankulam");
@@ -489,18 +461,14 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    void GitHub(ActionEvent e)
-    {
+    void GitHub(ActionEvent e) {
         Runtime runtime = Runtime.getRuntime();
 
         try {
             Process BrowserProcess = runtime.exec("firefox https://github.com/REKTR3X99/PBL_SEM3_BETTERGUI");
-        }catch(Exception ProcessException)
-        {
+        } catch (Exception ProcessException) {
             ProcessException.printStackTrace();
         }
     }
 
 }
-
-
