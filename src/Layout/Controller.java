@@ -17,6 +17,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.SQLOutput;
+import java.text.SimpleDateFormat;
+import java.time.OffsetTime;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -197,11 +200,96 @@ public class Controller implements Initializable {
 
         Platform.runLater(() ->
         {
-            DisplayTime(); //Display whatever the time is in the given region
+            DispTime(); //Display whatever the time is in the given region
 
             //Updater();
 
         });
+
+    }
+
+
+    void DispTime()
+    {
+        long SystemTimeUnix = System.currentTimeMillis();
+
+
+        String HourString = null;
+        String MinuteString = null;
+
+        boolean DoesExist = false;
+
+        long OffsetTimeHour;
+        long OffsetTimeMinutes;
+
+
+        String SeperatorStringHour = null;
+        String SeperatorStringMinutes = null;
+        String SeperatorStringSeconds = null;
+
+
+        String Checker = GMTOffset.get(CountryComboBox.getSelectionModel().getSelectedIndex());
+        SimpleDateFormat Format = new SimpleDateFormat("HH:mm:ss");
+        Format.setTimeZone(TimeZone.getTimeZone("GMT 0"));
+
+        if(!Checker.startsWith("UTC"))
+        {
+            HourString = Checker.substring(1, 3);
+            MinuteString = Checker.substring(4, 6);
+            DoesExist = true; //Saying that the given value exists in the Zone Offset data
+        }
+
+        if(DoesExist)
+        {
+            OffsetTimeHour = Integer.parseInt(HourString) * 3600 * 1000;
+            OffsetTimeMinutes = Integer.parseInt(MinuteString) * 60000;
+
+            if(Checker.startsWith("+"))
+            {
+                SystemTimeUnix += (OffsetTimeHour + OffsetTimeMinutes);
+
+                SeperatorStringHour = String.valueOf(Format.format(SystemTimeUnix)).substring(0,2);
+                SeperatorStringMinutes = String.valueOf(Format.format(SystemTimeUnix)).substring(3,5);
+                SeperatorStringSeconds = String.valueOf(Format.format(SystemTimeUnix)).substring(6, 8);
+
+                HourUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringHour) % 10));
+                SeperatorStringHour = String.valueOf(Integer.parseInt(SeperatorStringHour) / 10);
+                HourTens.setText(String.valueOf(Integer.parseInt(SeperatorStringHour)));
+
+                MinuteUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes) % 10));
+                SeperatorStringMinutes = String.valueOf(Integer.parseInt(SeperatorStringMinutes) / 10);
+                MinuteTens.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes)));
+
+                SecondUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds) % 10));
+                SeperatorStringSeconds = String.valueOf(Integer.parseInt(SeperatorStringSeconds) / 10);
+                SecondTens.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds)));
+
+
+
+            }else
+            {
+                SystemTimeUnix -=(OffsetTimeHour + OffsetTimeMinutes);
+
+
+                SeperatorStringHour = String.valueOf(Format.format(SystemTimeUnix)).substring(0,2);
+                SeperatorStringMinutes = String.valueOf(Format.format(SystemTimeUnix)).substring(3,5);
+                SeperatorStringSeconds = String.valueOf(Format.format(SystemTimeUnix)).substring(6, 8);
+
+                HourUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringHour) % 10));
+                SeperatorStringHour = String.valueOf(Integer.parseInt(SeperatorStringHour) / 10);
+                HourTens.setText(String.valueOf(Integer.parseInt(SeperatorStringHour)));
+
+                MinuteUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes) % 10));
+                SeperatorStringMinutes = String.valueOf(Integer.parseInt(SeperatorStringMinutes) / 10);
+                MinuteTens.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes)));
+
+                SecondUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds) % 10));
+                SeperatorStringSeconds = String.valueOf(Integer.parseInt(SeperatorStringSeconds) / 10);
+                SecondTens.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds)));
+            }
+
+        }
+
 
     }
 
