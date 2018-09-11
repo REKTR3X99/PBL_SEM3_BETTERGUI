@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import sun.nio.ch.sctp.Shutdown;
+import sun.security.jca.GetInstance;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -211,269 +212,108 @@ public class Controller implements Initializable {
 
     void DispTime()
     {
-        long SystemTimeUnix = System.currentTimeMillis();
-
-
-        String HourString = null;
-        String MinuteString = null;
-
-        boolean DoesExist = false;
-
-        long OffsetTimeHour;
-        long OffsetTimeMinutes;
-
-
-        String SeperatorStringHour = null;
-        String SeperatorStringMinutes = null;
-        String SeperatorStringSeconds = null;
-
-
-        String Checker = GMTOffset.get(CountryComboBox.getSelectionModel().getSelectedIndex());
-        SimpleDateFormat Format = new SimpleDateFormat("HH:mm:ss");
-        Format.setTimeZone(TimeZone.getTimeZone("GMT 0"));
-
-        if(!Checker.startsWith("UTC"))
-        {
-            HourString = Checker.substring(1, 3);
-            MinuteString = Checker.substring(4, 6);
-            DoesExist = true; //Saying that the given value exists in the Zone Offset data
-        }
-
-        if(DoesExist)
-        {
-            OffsetTimeHour = Integer.parseInt(HourString) * 3600 * 1000;
-            OffsetTimeMinutes = Integer.parseInt(MinuteString) * 60000;
-
-            if(Checker.startsWith("+"))
-            {
-                SystemTimeUnix += (OffsetTimeHour + OffsetTimeMinutes);
-
-                SeperatorStringHour = String.valueOf(Format.format(SystemTimeUnix)).substring(0,2);
-                SeperatorStringMinutes = String.valueOf(Format.format(SystemTimeUnix)).substring(3,5);
-                SeperatorStringSeconds = String.valueOf(Format.format(SystemTimeUnix)).substring(6, 8);
-
-                HourUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringHour) % 10));
-                SeperatorStringHour = String.valueOf(Integer.parseInt(SeperatorStringHour) / 10);
-                HourTens.setText(String.valueOf(Integer.parseInt(SeperatorStringHour)));
-
-                MinuteUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes) % 10));
-                SeperatorStringMinutes = String.valueOf(Integer.parseInt(SeperatorStringMinutes) / 10);
-                MinuteTens.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes)));
-
-                SecondUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds) % 10));
-                SeperatorStringSeconds = String.valueOf(Integer.parseInt(SeperatorStringSeconds) / 10);
-                SecondTens.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds)));
-
-
-
-            }else
-            {
-                SystemTimeUnix -=(OffsetTimeHour + OffsetTimeMinutes);
-
-
-                SeperatorStringHour = String.valueOf(Format.format(SystemTimeUnix)).substring(0,2);
-                SeperatorStringMinutes = String.valueOf(Format.format(SystemTimeUnix)).substring(3,5);
-                SeperatorStringSeconds = String.valueOf(Format.format(SystemTimeUnix)).substring(6, 8);
-
-                HourUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringHour) % 10));
-                SeperatorStringHour = String.valueOf(Integer.parseInt(SeperatorStringHour) / 10);
-                HourTens.setText(String.valueOf(Integer.parseInt(SeperatorStringHour)));
-
-                MinuteUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes) % 10));
-                SeperatorStringMinutes = String.valueOf(Integer.parseInt(SeperatorStringMinutes) / 10);
-                MinuteTens.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes)));
-
-                SecondUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds) % 10));
-                SeperatorStringSeconds = String.valueOf(Integer.parseInt(SeperatorStringSeconds) / 10);
-                SecondTens.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds)));
-            }
-
-        }
-
-
-    }
-
-    @FXML
-    void DisplayTime() {
-        int GMTHour = CalToGetTime.get(Calendar.HOUR_OF_DAY); //Get the current GMT Hour
-        int GMTMinute = CalToGetTime.get(Calendar.MINUTE); //Get the current GMT time
-        int GMTSeconds = CalToGetTime.get(Calendar.SECOND);
-
-
-        String checker = GMTOffset.get(CountryComboBox.getSelectionModel().getSelectedIndex());
-        String HourString; //To Store the hours
-        String MinuteString; //To Store the minutes
-        boolean DoesExist; //Initially is true
-
-        //Checking if the checker contains "UTC" or not
-        /*
-         * If It does have UTC it means that the time cannot be determined
-         * */
-        if (!checker.contains("UTC")) {
-            /*
-             * Format of the time in TimeZoneOffset.dat is (sign)X1X2.Y1Y2
-             *
-             * where sign gives the position relative to GMT, + means its ahead and - means its behind
-             * X1 and X2 correspond to the hours
-             * Y1 and Y2 correspond to the minutes
-             *
-             * substring of 1,3 is X1 and X2
-             * substring of 4,6 is Y1 and Y2
-             * */
-            HourString = checker.substring(1, 3);
-            MinuteString = checker.substring(4, 6);
-            DoesExist = true; //Saying that the given value exists in the Zone Offset data
-        } else {
-            DoesExist = false;
-            HourString = "0";
-            MinuteString = "0";
-        }
-
-
-        /*
-         * Bottom code checks if the start of the checker.
-         * Checker equals the data which has the index of the selected item from the combobox
-         * and the ZoneOffsetData.
-         *
-         * It checks if the checker starts with which sign and if the specified value exists in the given data or if its "UTC"
-         * for which the time cannot be determined.
-         */
-
-
-        /*
-         * if checker starts with "+" that is the read data starts with a "+" then add the number of hours of offset
-         * which is in the GMTHour to the given hour.
-         *
-         * After this if the number of Hours is more than 25, then negate the hours by 24 which would bring them in range
-         * Same with the number of minutes
-         */
-
-
-        /*
-         * if checker starts with "-" the selected country is behind GMT by X1X2 amount of hours.
-         * for this negate the number of hours ( Offset) from GMT.
-         *
-         * If the number is less than 0 then add 24 to it to bring it to the proper range
-         * same with the number of minutes
-         * */
-
-
-        if (checker.startsWith("+") && DoesExist) //If the country is ahead GMT and does exists in the ZoneOffsetData
-        {
-            try {
-                // offsetting the given GMTHour from the calendar by the Zone Offset from GMT
-                //For some reason  if I don't add 1 the time remains an hour behind so there's a 1
-                //Also converting HourString from String to Int
-                GMTHour = GMTHour + Integer.parseInt(HourString);
-
-                //Offsetting the minute and adding it to the GMTMinute.
-                //Also parsing the value of MinuteString to convert from String to Int
-                GMTMinute = GMTMinute + Integer.parseInt(MinuteString);
-
-                if (GMTHour >= 24) //Checking the addition exceeds or equals 24 hours
-                {
-                    GMTHour = GMTHour - 24; //Negating by 24 incase it exceeds
-                }
-
-                if (GMTMinute >= 60) //Checking if minutes exceeds or equals 60 minute
-                {
-                    GMTMinute = GMTMinute - 60; //If it does, negate by 60
-                }
-            } catch (Exception e) {
-                Alert ParsingErrorAheadGMT = new Alert(Alert.AlertType.ERROR);//Displaying error
-
-                ParsingErrorAheadGMT.setHeaderText("Parsing Error");
-                ParsingErrorAheadGMT.setContentText("An error have occurred while parsing the timezones behind GMT ");
-                ParsingErrorAheadGMT.showAndWait();
-
-            }
-        } else if (checker.startsWith("-") && DoesExist) //If the country is behind GMT
-        {
-            try {
-                GMTHour = GMTHour - Integer.parseInt(HourString);
-                GMTMinute = GMTMinute - Integer.parseInt(MinuteString);
-
-                if (GMTHour < 0) {
-                    GMTHour = GMTHour + 24;
-                }
-
-                if (GMTMinute < 0) {
-                    GMTMinute = GMTMinute + 60;
-                }
-            } catch (Exception e) {
-                Alert ParsingErrorBehindGMT = new Alert(Alert.AlertType.ERROR);//Displaying error
-
-                ParsingErrorBehindGMT.setHeaderText("Parsing Error");
-                ParsingErrorBehindGMT.setContentText("An error have occurred while parsing the timezones behind GMT ");
-                ParsingErrorBehindGMT.showAndWait();
-
-            }
-        }
-
-
-        HourUnits.setText(String.valueOf(GMTHour % 10));
-        GMTHour /= 10;
-        HourTens.setText(String.valueOf(GMTHour));
-
-        MinuteUnits.setText(String.valueOf(GMTHour % 10));
-        GMTMinute /= 10;
-        MinuteTens.setText(String.valueOf(GMTMinute));
-
-        SecondUnits.setText(String.valueOf(GMTSeconds % 10));
-        GMTSeconds /= 10;
-        SecondTens.setText(String.valueOf(GMTSeconds));
-
-
         //Lambda Function to update time after specific interval
         Timer SecondsTimer = new Timer();
         SecondsTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> {
-                    long MiliSecond;
-                    long Seconds;
+
+                    long SystemTimeUnix = System.currentTimeMillis();
 
 
-                    MiliSecond = System.currentTimeMillis();
-                    Seconds = (MiliSecond / 1000) % 60;
+
+                    String HourString = null;
+                    String MinuteString = null;
+
+                    boolean DoesExist = false;
+
+                    long OffsetTimeHour;
+                    long OffsetTimeMinutes;
 
 
-                    if (Seconds == 59) {
-                        long Minutes = CalToGetTime.get(Calendar.MINUTE);
-                        long MinHolder = Minutes;
+                    String SeperatorStringHour = null;
+                    String SeperatorStringMinutes = null;
+                    String SeperatorStringSeconds = null;
 
-                        MinuteUnits.setText(String.valueOf(MinHolder % 10));
-                        MinHolder /= 10;
-                        MinuteTens.setText(String.valueOf(MinHolder));
 
-                        Minutes++;
+                    String Checker = GMTOffset.get(CountryComboBox.getSelectionModel().getSelectedIndex());
+                    SimpleDateFormat Format = new SimpleDateFormat("HH:mm:ss");
+                    Format.setTimeZone(TimeZone.getTimeZone("GMT 0"));
 
-                        if(Minutes == 59)
-                        {
-                            long Hours = CalToGetTime.get(Calendar.HOUR_OF_DAY);
-                            long HourHolder = Hours;
-
-                            HourUnits.setText(String.valueOf(HourHolder % 10));
-                            HourHolder /=10;
-                            HourTens.setText(String.valueOf(HourHolder));
-
-                            Hours++;
-
-                        }
+                    if(!Checker.startsWith("UTC"))
+                    {
+                        HourString = Checker.substring(1, 3);
+                        MinuteString = Checker.substring(4, 6);
+                        DoesExist = true; //Saying that the given value exists in the Zone Offset data
                     }
 
+                    if(DoesExist)
+                    {
+                        OffsetTimeHour = Integer.parseInt(HourString) * 3600 * 1000;
+                        OffsetTimeMinutes = Integer.parseInt(MinuteString) * 60000;
 
-                    //Update Seconds
-                    SecondUnits.setText(String.valueOf(Seconds % 10));
-                    Seconds /= 10;
-                    SecondTens.setText(String.valueOf(Seconds));
+                        if(Checker.startsWith("+"))
+                        {
+                            SystemTimeUnix += (OffsetTimeHour + OffsetTimeMinutes);
+
+
+                            SeperatorStringHour = String.valueOf(Format.format(SystemTimeUnix)).substring(0,2);
+                            SeperatorStringMinutes = String.valueOf(Format.format(SystemTimeUnix)).substring(3,5);
+                            SeperatorStringSeconds = String.valueOf(Format.format(SystemTimeUnix)).substring(6, 8);
+
+                            HourUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringHour) % 10));
+                            SeperatorStringHour = String.valueOf(Integer.parseInt(SeperatorStringHour) / 10);
+                            HourTens.setText(String.valueOf(Integer.parseInt(SeperatorStringHour)));
+
+                            MinuteUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes) % 10));
+                            SeperatorStringMinutes = String.valueOf(Integer.parseInt(SeperatorStringMinutes) / 10);
+                            MinuteTens.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes)));
+
+                            SecondUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds) % 10));
+                            SeperatorStringSeconds = String.valueOf(Integer.parseInt(SeperatorStringSeconds) / 10);
+                            SecondTens.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds)));
+
+
+
+                        }else
+                            {
+                                SystemTimeUnix -=(OffsetTimeHour + OffsetTimeMinutes);
+
+
+                                SeperatorStringHour = String.valueOf(Format.format(SystemTimeUnix)).substring(0,2);
+                                SeperatorStringMinutes = String.valueOf(Format.format(SystemTimeUnix)).substring(3,5);
+                                SeperatorStringSeconds = String.valueOf(Format.format(SystemTimeUnix)).substring(6, 8);
+
+                                HourUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringHour) % 10));
+                                SeperatorStringHour = String.valueOf(Integer.parseInt(SeperatorStringHour) / 10);
+                                HourTens.setText(String.valueOf(Integer.parseInt(SeperatorStringHour)));
+
+                                MinuteUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes) % 10));
+                                SeperatorStringMinutes = String.valueOf(Integer.parseInt(SeperatorStringMinutes) / 10);
+                                MinuteTens.setText(String.valueOf(Integer.parseInt(SeperatorStringMinutes)));
+
+                                SecondUnits.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds) % 10));
+                                SeperatorStringSeconds = String.valueOf(Integer.parseInt(SeperatorStringSeconds) / 10);
+                                SecondTens.setText(String.valueOf(Integer.parseInt(SeperatorStringSeconds)));
+                            }
+
+                    }else
+                        {
+                            Alert TimeFaultAlert = new Alert(Alert.AlertType.INFORMATION);
+                            TimeFaultAlert.setHeaderText("TimeZone Fault");
+                            TimeFaultAlert.setContentText("The set country changes time at a set interval, proper GMT offset cannot be determined");
+                            TimeFaultAlert.showAndWait();
+                        }
+
+
+
 
                 });
             }
         }, 1000, 10);
 
     }
-
 
     @FXML
     void CurrencyConvertFunction(ActionEvent e) {
