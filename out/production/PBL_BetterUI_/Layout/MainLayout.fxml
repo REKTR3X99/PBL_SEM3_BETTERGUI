@@ -11,36 +11,36 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-<Pane fx:id="BasePane" cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="974.0" style="-fx-background-image: WorldMap.png;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
+<Pane id="AnchorPane" fx:id="BasePane" cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="974.0" style="-fx-opacity: 50;" styleClass="bodybg" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
    <children>
-      <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" onAction="#Capital" prefHeight="49.0" prefWidth="486.0">
+      <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" nodeOrientation="LEFT_TO_RIGHT" onAction="#Capital" prefHeight="49.0" prefWidth="486.0" promptText="SEELECT A COUNTRY" style="-fx-border-color: black;">
          <tooltip>
             <Tooltip text="Select a Country from the list" />
          </tooltip></ComboBox>
-      <Label fx:id="CapitalDisplayLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="529.0" layoutY="80.0" prefHeight="51.0" prefWidth="429.0" style="-fx-border-color: grey; -fx-border-width: 4; -fx-border-radius: 10;" textAlignment="CENTER">
+      <Label fx:id="CapitalDisplayLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="529.0" layoutY="80.0" prefHeight="51.0" prefWidth="429.0" style="-fx-border-color: black; -fx-border-width: 4; -fx-border-radius: 10;" textAlignment="CENTER">
          <font>
             <Font size="30.0" />
          </font>
          <tooltip>
             <Tooltip text="Here you will see the names of the capital" />
          </tooltip></Label>
-      <Label fx:id="HourTens" alignment="CENTER" contentDisplay="CENTER" layoutX="17.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+      <Label fx:id="HourTens" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="221.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: black; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font></Label>
-      <Label fx:id="HourUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="158.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+      <Label fx:id="HourUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="155.0" layoutY="221.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: black; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font></Label>
-      <Label fx:id="MinuteTens" alignment="CENTER" contentDisplay="CENTER" layoutX="345.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+      <Label fx:id="MinuteTens" alignment="CENTER" contentDisplay="CENTER" layoutX="342.0" layoutY="221.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: black; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font></Label>
-      <Label fx:id="MinuteUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="486.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+      <Label fx:id="MinuteUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="483.0" layoutY="221.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: black; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font></Label>
-      <MenuBar fx:id="Menu" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="883.0">
+      <MenuBar fx:id="Menu" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="883.0" style="-fx-border-color: black;">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -55,32 +55,32 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="CloseButton" contentDisplay="CENTER" layoutX="907.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" onMouseClicked="#GitHub" prefHeight="35.0" prefWidth="51.0" text="X" />
-      <Label fx:id="SecondUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="823.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+      <Button fx:id="CloseButton" contentDisplay="CENTER" layoutX="907.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" onMouseClicked="#GitHub" prefHeight="35.0" prefWidth="51.0" style="-fx-border-color: black;" text="X" />
+      <Label fx:id="SecondUnits" alignment="CENTER" contentDisplay="CENTER" layoutX="820.0" layoutY="221.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: black; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font>
       </Label>
-      <Label fx:id="SecondTens" alignment="CENTER" contentDisplay="CENTER" layoutX="682.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: grey; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
+      <Label fx:id="SecondTens" alignment="CENTER" contentDisplay="CENTER" layoutX="679.0" layoutY="221.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="135.0" prefWidth="135.0" style="-fx-border-color: black; -fx-border-width: 5; -fx-border-radius: 38;" textAlignment="CENTER">
          <font>
             <Font size="96.0" />
          </font>
       </Label>
-      <TextField fx:id="CurrencyFromText" layoutX="226.0" layoutY="416.0" prefHeight="49.0" prefWidth="182.0" style="-fx-border-width: 10;" text="1" />
-      <ComboBox fx:id="CurrencyFrom" layoutX="38.0" layoutY="416.0" prefHeight="49.0" prefWidth="182.0">
+      <TextField fx:id="CurrencyFromText" layoutX="226.0" layoutY="416.0" prefHeight="49.0" prefWidth="182.0" style="-fx-border-color: black;" text="1" />
+      <ComboBox fx:id="CurrencyFrom" layoutX="38.0" layoutY="416.0" prefHeight="49.0" prefWidth="182.0" promptText="SELECT CURRENCY" style="-fx-border-color: black;">
          <tooltip>
             <Tooltip text="Select a currency you want to convert" />
          </tooltip></ComboBox>
-      <ComboBox fx:id="CurrencyTo" layoutX="504.0" layoutY="415.0" prefHeight="49.0" prefWidth="182.0">
+      <ComboBox fx:id="CurrencyTo" layoutX="504.0" layoutY="415.0" prefHeight="49.0" prefWidth="182.0" promptText="SELECT CURRENCY" style="-fx-border-color: black;">
          <tooltip>
             <Tooltip text="Select a currency to which you want to convert" />
          </tooltip></ComboBox>
-      <Label fx:id="CurrencyToLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="696.0" layoutY="415.0" prefHeight="35.0" prefWidth="182.0" style="-fx-border-color: grey; -fx-border-width: 4; -fx-border-radius: 0;" textAlignment="CENTER">
+      <Label fx:id="CurrencyToLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="696.0" layoutY="415.0" prefHeight="35.0" prefWidth="182.0" style="-fx-border-color: black; -fx-border-width: 4; -fx-border-radius: 10;" textAlignment="CENTER">
          <font>
             <Font size="30.0" />
          </font>
       </Label>
-      <Button fx:id="CurrencyConvertButton" layoutX="386.0" layoutY="518.0" mnemonicParsing="false" onAction="#CurrencyConvertFunction" prefHeight="43.0" prefWidth="145.0" text="Convert">
+      <Button fx:id="CurrencyConvertButton" layoutX="386.0" layoutY="518.0" mnemonicParsing="false" onAction="#CurrencyConvertFunction" prefHeight="43.0" prefWidth="145.0" style="-fx-border-color: black;" text="CONVERT">
          <tooltip>
             <Tooltip text="Click to Convert" />
          </tooltip></Button>
