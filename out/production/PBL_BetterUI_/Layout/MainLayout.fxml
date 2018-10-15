@@ -11,7 +11,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-<Pane fx:id="BasePane" cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="974.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
+<Pane fx:id="BasePane" cache="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="589.0" prefWidth="974.0" style="-fx-background-image: WorldMap.png;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Layout.Controller">
    <children>
       <ComboBox fx:id="CountryComboBox" layoutX="14.0" layoutY="80.0" onAction="#Capital" prefHeight="49.0" prefWidth="486.0">
          <tooltip>

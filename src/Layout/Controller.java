@@ -3,13 +3,11 @@ package Layout;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,7 +16,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,10 +70,6 @@ public class Controller implements Initializable {
 
     @FXML
     private Button CurrencyConvertButton;
-
-
-    //Setting the Calendar to read GMT Time
-    private Calendar CalToGetTime = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 
 
     //Initializing the frame and adding all the names of countries
@@ -300,13 +293,9 @@ public class Controller implements Initializable {
                             TimeFaultAlert.setContentText("The set country changes time at a set interval, proper GMT offset cannot be determined");
                             TimeFaultAlert.showAndWait();
                         }
-
-
-
-
                 });
             }
-        }, 1000, 10);
+        }, 1000, 2);
 
     }
 
